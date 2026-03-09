@@ -40,6 +40,9 @@ export default function Home() {
   }, [pages, loaded]);
   const [newUrl, setNewUrl] = useState("");
   const [newTitle, setNewTitle] = useState("");
+  const [editingPage, setEditingPage] = useState<GammaPage | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editUrl, setEditUrl] = useState("");
 
   function extractEmbedUrl(input: string): string {
     // Handle various Gamma URL formats:
@@ -83,6 +86,24 @@ export default function Home() {
 
   function removePage(id: string) {
     setPages(pages.filter((p) => p.id !== id));
+  }
+
+  function openEditPopup(page: GammaPage) {
+    setEditingPage(page);
+    setEditTitle(page.title);
+    setEditUrl(page.url);
+  }
+
+  function saveEdit() {
+    if (!editingPage) return;
+    setPages(
+      pages.map((p) =>
+        p.id === editingPage.id
+          ? { ...p, title: editTitle.trim() || p.title, url: editUrl.trim() || p.url }
+          : p
+      )
+    );
+    setEditingPage(null);
   }
 
   return (
@@ -142,11 +163,7 @@ export default function Home() {
             >
               <div
                 className="cursor-pointer p-5"
-                onClick={() =>
-                  router.push(
-                    `/view?url=${encodeURIComponent(page.url)}&title=${encodeURIComponent(page.title)}`
-                  )
-                }
+                onClick={() => openEditPopup(page)}
               >
                 <h3 className="font-medium text-zinc-900 dark:text-zinc-100">
                   {page.title}
@@ -180,6 +197,71 @@ export default function Home() {
         {pages.length === 0 && (
           <div className="py-20 text-center text-zinc-400">
             No Gamma pages added yet. Add one above to get started.
+          </div>
+        )}
+
+        {/* Edit Popup */}
+        {editingPage && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            onClick={() => setEditingPage(null)}
+          >
+            <div
+              className="w-full max-w-md rounded-lg border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                Edit Page
+              </h2>
+              <div className="flex flex-col gap-3">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                    className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    URL
+                  </label>
+                  <input
+                    type="text"
+                    value={editUrl}
+                    onChange={(e) => setEditUrl(e.target.value)}
+                    className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                  />
+                </div>
+              </div>
+              <div className="mt-5 flex gap-3 justify-end">
+                <button
+                  onClick={() => setEditingPage(null)}
+                  className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() =>
+                    router.push(
+                      `/view?url=${encodeURIComponent(editingPage.url)}&title=${encodeURIComponent(editingPage.title)}`
+                    )
+                  }
+                  className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                >
+                  View
+                </button>
+                <button
+                  onClick={saveEdit}
+                  className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </main>
