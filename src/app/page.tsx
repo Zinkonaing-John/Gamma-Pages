@@ -30,6 +30,7 @@ import {
   Share,
   Logout,
 } from "@mui/icons-material";
+import { ThemeToggle } from "./theme-toggle";
 
 interface CardRow {
   id: string;
@@ -365,24 +366,27 @@ export default function Home() {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
           <div>
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-              Docs Embed
+              Z-Docs
             </h1>
             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               Embed and view your Docs
             </p>
           </div>
-          {user && (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                {user.email}
-              </span>
-              <Tooltip title="Sign out" arrow>
-                <IconButton onClick={handleLogout} size="small" sx={{ color: "white" }}>
-                  <Logout fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            {user && (
+              <>
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                  {user.email}
+                </span>
+                <Tooltip title="Sign out" arrow>
+                  <IconButton onClick={handleLogout} size="small" sx={{ color: "white" }}>
+                    <Logout fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
+          </div>
         </div>
       </header>
 
