@@ -379,11 +379,13 @@ export default function Home() {
                 <span className="text-sm text-zinc-500 dark:text-zinc-400">
                   {user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0]}
                 </span>
-                <Tooltip title="Sign out" arrow>
-                  <IconButton onClick={handleLogout} size="small" sx={{ color: "white" }}>
-                    <Logout fontSize="small" />
-                  </IconButton>
-                </Tooltip>
+                <button
+                  onClick={handleLogout}
+                  title="Sign out"
+                  className="rounded-md p-1.5 text-zinc-700 transition-colors hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                >
+                  <Logout sx={{ fontSize: 20 }} />
+                </button>
               </>
             )}
           </div>
