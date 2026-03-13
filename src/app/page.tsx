@@ -377,7 +377,7 @@ export default function Home() {
             {user && (
               <>
                 <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                  {user.email}
+                  {user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0]}
                 </span>
                 <Tooltip title="Sign out" arrow>
                   <IconButton onClick={handleLogout} size="small" sx={{ color: "white" }}>
